@@ -37,31 +37,58 @@ This builds and lints the source tree directly. The script prints the resulting 
 
 The GitHub Actions `Fire OS Build` workflow independently runs `:app:assembleDebug` and `:app:lintDebug` and uploads the debug APK as a workflow artifact.
 
-## Install on a Fire TV development device
+## Fire TV test-device preflight
+
+Connect to the Fire TV and record a concise compatibility snapshot before changing settings:
 
 ```bash
-bash scripts/device/install-debug.sh 192.168.1.50
+bash scripts/device/adb-connect.sh 192.168.1.50
+bash scripts/device/device-info.sh 192.168.1.50
 ```
 
-ADB debugging must be enabled and the development machine authorized on the Fire TV.
-
-## Accessibility service
-
-Use Fire TV's Accessibility settings normally when the installed Fire OS build exposes a usable service list. For POC hardware where Amazon's Accessibility UI cannot enable the service, the ADB helper can add the service without removing other enabled accessibility services:
-
-```bash
-bash scripts/device/enable-accessibility.sh 192.168.1.50
-```
-
-This helper is for development/testing. Store-release setup must follow the path accepted by Amazon certification and the target Fire OS version.
-
-## Remote capture
+For remote/profile investigation, capture the device input stack as well:
 
 ```bash
 bash scripts/device/collect-input-devices.sh 192.168.1.50
 ```
 
 Raw captures are ignored by Git. Sanitize any hardware/user data before deliberately committing a fixture.
+
+## Install on a Fire TV development device
+
+Install a locally built debug APK:
+
+```bash
+bash scripts/device/install-debug.sh 192.168.1.50
+```
+
+Or install an APK downloaded from a successful GitHub Actions artifact without rebuilding locally:
+
+```bash
+bash scripts/device/install-debug.sh 192.168.1.50 /path/to/app-debug.apk
+```
+
+ADB debugging must be enabled and the development machine authorized on the Fire TV.
+
+## Accessibility service
+
+Use Fire TV's Accessibility settings normally when the installed Fire OS build exposes a usable service list. For POC hardware where Amazon's Accessibility UI cannot enable the service, the ADB helper can add the QuickBars service **without removing other enabled accessibility services**:
+
+```bash
+bash scripts/device/enable-accessibility.sh 192.168.1.50
+```
+
+The helper defaults to the debug application ID `io.github.cam1985.quickbars.fireos.debug`. A different installed package ID can be passed as the second argument when needed.
+
+This helper is for development/testing. Store-release setup must follow the path accepted by Amazon certification and the target Fire OS version.
+
+## Logcat
+
+For the main Fire port runtime tags:
+
+```bash
+bash scripts/device/logcat.sh 192.168.1.50
+```
 
 ## Fire compatibility seam check after upstream merges
 
