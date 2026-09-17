@@ -16,6 +16,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Store-neutral Fire entitlement provider seam and beta-unlocked provider.
 - Amazon IAP manifest requirements for App Tester/Appstore package visibility and `ResponseReceiver`.
 - Development scripts for build/lint, upstream checks and ADB Fire TV testing.
+- Fire TV compatibility snapshot helper covering model/build/SDK, Fire TV feature detection, installed port package versions and accessibility state.
+- Accessibility-service development helper that preserves other enabled accessibility services while adding QuickBars.
 - Deterministic runtime-seam migration/drift-check script for replaying the small Fire-specific source changes after upstream merges.
 - Fire OS architecture, compatibility, remote, IAP, research and parity-test documentation.
 - GitHub Actions validation for shell/Python tooling, Android debug APK compilation and Android lint.
@@ -28,10 +30,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - QuickBar, camera PiP and notification overlay permission/window-type decisions are routed through the Fire OS platform capability layer.
 - Remote keys are normalized through the Fire remote profile registry before entering the existing QuickBars gesture handling.
 - Fire build CI now uses the hosted Android SDK directly, pins API/build-tools requirements, separates compilation from lint, caches Gradle dependencies and applies a build timeout.
+- Fire TV install helper can install either a locally built debug APK or an explicit APK path downloaded from a successful CI artifact.
+- Physical POC test plan now begins with a reproducible device/OS/input baseline capture.
 
 ### Fixed
 - GitHub Actions no longer depends on the retired Android SDK `tools` package requested by `android-actions/setup-android@v3`.
 - GitHub Actions normalizes the upstream Gradle wrapper execute permission on hosted Linux runners before building.
+- Development documentation no longer references a missing accessibility helper.
 
 ### Security
 - Amazon authentication keys, receipt-verification secrets, signing keystores/passwords and local device captures are excluded from version control.
