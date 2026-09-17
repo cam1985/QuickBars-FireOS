@@ -697,7 +697,7 @@ class SettingsFragment : Fragment(), HomeAssistantListener {
      */
     private fun isOverlayPermissionGranted(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(requireContext())
+            dev.trooped.tvquickbars.platform.PlatformCapabilities.canPresentOverlays(requireContext())
         } else {
             true
         }

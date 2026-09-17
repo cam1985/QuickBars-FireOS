@@ -20,6 +20,7 @@ import dev.trooped.tvquickbars.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dev.trooped.tvquickbars.services.QuickBarService
+import dev.trooped.tvquickbars.platform.PlatformCapabilities
 
 /**
  * PermissionUtils Class
@@ -38,7 +39,7 @@ object PermissionUtils {
      */
     @RequiresApi(Build.VERSION_CODES.M)
     fun canDrawOverlays(context: Context): Boolean {
-        return Settings.canDrawOverlays(context)
+        return PlatformCapabilities.canPresentOverlays(context)
     }
 
     /**

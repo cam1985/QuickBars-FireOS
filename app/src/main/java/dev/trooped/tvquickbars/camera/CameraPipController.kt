@@ -26,6 +26,7 @@ import dev.trooped.tvquickbars.QuickBarsApp
 import dev.trooped.tvquickbars.R
 import dev.trooped.tvquickbars.persistence.SavedEntitiesManager
 import dev.trooped.tvquickbars.persistence.SecurePrefsManager
+import dev.trooped.tvquickbars.platform.PlatformCapabilities
 import dev.trooped.tvquickbars.data.EntityItem
 import dev.trooped.tvquickbars.services.ComposeViewLifecycleOwner
 import kotlin.math.roundToInt
@@ -232,7 +233,7 @@ class CameraPipController(
 
     @MainThread
     fun show(spec: CameraPipSpec): Unit = runOnMain {
-        if (!Settings.canDrawOverlays(context)) return@runOnMain
+        if (!PlatformCapabilities.canPresentOverlays(context)) return@runOnMain
 
         if (!pipLifecycleCreated) {
             pipLifecycleOwner.create()
@@ -302,7 +303,7 @@ class CameraPipController(
         val params = WindowManager.LayoutParams(
             finalW,
             finalH,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            PlatformCapabilities.overlayWindowType(context),
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or

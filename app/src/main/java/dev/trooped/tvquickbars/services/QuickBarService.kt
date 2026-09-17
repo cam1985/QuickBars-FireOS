@@ -68,6 +68,8 @@ import dev.trooped.tvquickbars.camera.CameraRequest
 import dev.trooped.tvquickbars.data.TriggerKey
 import dev.trooped.tvquickbars.notification.NotificationController
 import dev.trooped.tvquickbars.notification.NotificationSpec
+import dev.trooped.tvquickbars.platform.PlatformCapabilities
+import dev.trooped.tvquickbars.platform.FireRemoteProfileRegistry
 
 /**
  * QuickBarService Class
@@ -524,7 +526,7 @@ class QuickBarService : AccessibilityService(), HomeAssistantListener {
     override fun onKeyEvent(event: KeyEvent?): Boolean {
         // 0) Sanity
         val keyCodeRaw = event?.keyCode ?: return super.onKeyEvent(event)
-        val keyCode = normalizeConfirm(keyCodeRaw)
+        val keyCode = normalizeConfirm(FireRemoteProfileRegistry.normalizeKey(event))
 
         // 1) Overlay visible?
         if (overlayView != null && (keyCode == KeyEvent.KEYCODE_BACK || keyCode == overlayOwnerKeyCode)) {
@@ -1312,7 +1314,7 @@ class QuickBarService : AccessibilityService(), HomeAssistantListener {
      */
     @MainThread
     private fun triggerQuickBar(bar: QuickBar) = runOnMain{
-        if (!Settings.canDrawOverlays(this)) {
+        if (!PlatformCapabilities.canPresentOverlays(this)) {
             // This permission check part is correct and unchanged.
             val intent = Intent("ACTION_OVERLAY_PERMISSION_REQUIRED")
             intent.putExtra("QUICKBAR_ID", bar.id)
@@ -1575,7 +1577,7 @@ class QuickBarService : AccessibilityService(), HomeAssistantListener {
         }
         val overlayHeight = if (isHorizontal) (screenHeight * 0.40f).toInt() else WindowManager.LayoutParams.MATCH_PARENT
 
-        val layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        val layoutFlag = PlatformCapabilities.overlayWindowType(this)
 
         val gravity = when (bar.position) {
             QuickBarPosition.RIGHT -> Gravity.END or Gravity.TOP

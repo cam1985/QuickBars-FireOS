@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.MainThread
 import androidx.compose.ui.platform.ComposeView
 import dev.trooped.tvquickbars.R
+import dev.trooped.tvquickbars.platform.PlatformCapabilities
 import dev.trooped.tvquickbars.background.BackgroundHaConnectionManager
 import dev.trooped.tvquickbars.data.AppIdProvider
 import dev.trooped.tvquickbars.persistence.SecurePrefsManager
@@ -132,7 +133,7 @@ class NotificationController(
 
     @MainThread
     private fun show(spec: NotificationSpec) {
-        if (!android.provider.Settings.canDrawOverlays(context)) return
+        if (!PlatformCapabilities.canPresentOverlays(context)) return
 
         val themed = ContextThemeWrapper(context, R.style.Theme_HAQuickBars)
         val view = ComposeView(themed).apply {
@@ -231,7 +232,7 @@ class NotificationController(
 
 
     private fun createWindowParams(spec: NotificationSpec): WindowManager.LayoutParams {
-        val type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        val type = PlatformCapabilities.overlayWindowType(context)
         val hasActions = spec.actions.isNotEmpty()
 
         val baseFlags =
