@@ -1,0 +1,45 @@
+name: Apply Fire OS runtime seams
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/apply_runtime_seams.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply deterministic Fire OS source changes
+        run: python3 scripts/apply_runtime_seams.py
+
+      - name: Validate patch whitespace
+        run: git diff --check
+
+      - name: Commit runtime seam wiring
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Runtime seams are already applied."
+            exit 0
+          fi
+          git config user.name "Cam Ashton"
+          git config user.email "4634139+cam1985@users.noreply.github.com"
+          git add \
+            app/src/main/java/dev/trooped/tvquickbars/utils/PermissionUtils.kt \
+            app/src/main/java/dev/trooped/tvquickbars/ui/SettingsFragment.kt \
+            app/src/main/java/dev/trooped/tvquickbars/camera/CameraPipController.kt \
+            app/src/main/java/dev/trooped/tvquickbars/notification/NotificationController.kt \
+            app/src/main/java/dev/trooped/tvquickbars/services/QuickBarService.kt
+          git commit -m "feat: wire Fire OS runtime compatibility seams"
+          git push origin HEAD:main
