@@ -9,17 +9,19 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "dev.trooped.tvquickbars"
+        applicationId = "io.github.cam1985.quickbars.fireos"
         minSdk = 28
         targetSdk = 35
         versionCode = 25
-        versionName = "1.3.3"
+        versionName = "1.3.3-fireos-poc1"
         buildConfigField("String", "REVENUECAT_API_KEY", findProperty("REVENUECAT_API_KEY") as String? ?: "\"\"")
+        buildConfigField("boolean", "FIRE_OS_PORT", "true")
+        buildConfigField("boolean", "FIRE_BETA_UNLOCK_PLUS", "true")
+        buildConfigField("boolean", "AMAZON_IAP_ENABLED", "false")
     }
 
     signingConfigs {
         create("release") {
-            // Read properties for the keystore file location and passwords
             val keystorePath = findProperty("HA_QUICKBARS_KEYSTORE_FILE") as String?
 
             if (keystorePath != null) {
@@ -49,7 +51,6 @@ android {
         }
 
         create("profileable") {
-            // This copies settings from your release build (like code shrinking)
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = ".profileable"
@@ -90,14 +91,13 @@ dependencies {
     implementation("com.mikepenz:material-design-iconic-typeface:2.2.0.8-kotlin")
     implementation("com.google.code.gson:gson:2.13.1")
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.security:security-crypto-ktx:1.1.0-beta01") // Updated to beta
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3") // Updated
+    implementation("androidx.security:security-crypto-ktx:1.1.0-beta01")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.google.zxing:core:3.5.3")
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     implementation(libs.androidx.core.animation)
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("androidx.datastore:datastore-preferences:1.1.7")
-    // ―― Crypto layer -----------------------------------------------------
     implementation("com.google.crypto.tink:tink-android:1.18.0")
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${lifecycle_version}")
@@ -109,21 +109,24 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core")
     implementation("androidx.compose.material:material-icons-extended")
 
+    // Kept for upstream code compatibility during the Fire OS POC. Runtime initialization
+    // is disabled while FIRE_BETA_UNLOCK_PLUS=true.
     implementation("com.revenuecat.purchases:purchases:9.1.2")
 
-    // Jetpack Compose Dependencies (Updated)
+    // Amazon Appstore SDK for the future production Plus entitlement path.
+    implementation("com.amazon.device:amazon-appstore-sdk:3.0.9")
+
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.activity:activity-compose:1.11.0") // This is not in the BOM, so it needs its own version.
+    implementation("androidx.activity:activity-compose:1.11.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("org.jmdns:jmdns:3.6.2")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.caverock:androidsvg:1.4")
-    //implementation("io.coil-kt:coil-svg:2.7.0")
 
     implementation("androidx.media3:media3-exoplayer:1.8.0")
     implementation("androidx.media3:media3-exoplayer-rtsp:1.8.0")
