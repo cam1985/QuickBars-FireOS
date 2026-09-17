@@ -47,7 +47,7 @@ jobs:
 
       - name: Gradle wrapper validation
         run: |
-          test -x ./gradlew
+          chmod +x ./gradlew
           ./gradlew --version
 
       - name: Build and lint
