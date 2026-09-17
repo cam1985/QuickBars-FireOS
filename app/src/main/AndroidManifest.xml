@@ -2,21 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="com.android.vending.BILLING" />
+    <!-- Fire OS port: remove Google Play Billing and SYSTEM_ALERT_WINDOW from the merged manifest. -->
+    <uses-permission android:name="com.android.vending.BILLING" tools:node="remove" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" tools:node="remove" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-
-    <!-- Foreground Service baseline + Android 14+ FGS type -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-
-    <!-- So we can auto-start after reboot if the user enables the toggle -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -105,6 +101,7 @@
             android:exported="false"
             android:label="Manage Saved Entities" />
         <activity android:name="dev.trooped.tvquickbars.ui.EntityImporterActivity" />
+
         <service
             android:name="dev.trooped.tvquickbars.services.QuickBarService"
             android:exported="false"
@@ -117,20 +114,27 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-
-        <!-- Always-on HA connection (small, persistent foreground notification) -->
         <service
             android:name=".services.HAConnectionService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <!-- Start service at boot if the setting is enabled -->
         <receiver
             android:name=".receivers.BootCompletedReceiver"
             android:enabled="false"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Amazon Appstore SDK IAP callback receiver. Runtime purchasing is disabled in beta. -->
+        <receiver
+            android:name="com.amazon.device.iap.ResponseReceiver"
+            android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.amazon.inapp.purchasing.NOTIFY" />
             </intent-filter>
         </receiver>
 
@@ -147,6 +151,8 @@
     </application>
 
     <queries>
+        <package android:name="com.amazon.sdktestclient" />
+        <package android:name="com.amazon.venezia" />
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
