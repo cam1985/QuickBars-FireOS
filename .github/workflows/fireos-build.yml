@@ -12,9 +12,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
@@ -50,8 +51,11 @@ jobs:
           chmod +x ./gradlew
           ./gradlew --version
 
-      - name: Build and lint
-        run: ./gradlew --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Build debug APK
+        run: ./gradlew --no-daemon :app:assembleDebug
+
+      - name: Lint Fire OS debug build
+        run: ./gradlew --no-daemon :app:lintDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
