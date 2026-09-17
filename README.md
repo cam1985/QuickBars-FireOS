@@ -1,5 +1,7 @@
 # QuickBars for Fire OS
 
+[![Fire OS Build](https://github.com/cam1985/QuickBars-FireOS/actions/workflows/fireos-build.yml/badge.svg)](https://github.com/cam1985/QuickBars-FireOS/actions/workflows/fireos-build.yml)
+
 > [!IMPORTANT]
 > **Unofficial Fire OS port / proof of concept.** This repository is a community-maintained port of [Trooped/QuickBars](https://github.com/Trooped/QuickBars) for Android-based Amazon Fire TV / Fire OS devices. It is **not the official QuickBars repository**, is not currently endorsed or maintained by the upstream author, and is not affiliated with Amazon.
 >
